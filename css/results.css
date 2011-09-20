@@ -1,0 +1,67 @@
+.result-container {
+	font-size: 11px;
+	font-family: tahoma,arial,verdana,sans-serif;
+	margin-bottom: 5px;
+	width: 463px;
+}
+
+.result-heading {
+	font-weight: bold;
+	color: #15428B;
+	font-size: 1.1em;
+	/*
+	border: 1.5px solid white;
+	*/
+	border-bottom: 1px solid #99BBE8;
+	background-color: #E9EEF7;
+	padding: 4px;
+}
+
+.result-abstract {
+	padding: 4px;
+	/*
+	border-left: 1px solid #99BBE8;
+	border-right: 1px solid #99BBE8;
+	*/
+}
+
+.result-toolbar {
+	border: 1px solid #DFE8F6;
+	background-color: #99BBE8;
+}
+
+.result-table {
+	width: 100%;
+	font-size: 1em;
+	color: #15428B;
+	text-align: center;
+}
+
+.result-tool {
+	border: 1px solid white;
+	padding: 2px;
+	background-color: #DFE8F6;
+}
+
+.result-row-selected {
+	padding: 3px;
+	background-color: #ee9900;
+}
+
+#limit-by-map-extent {
+	margin-top: 0px;
+}
+
+.beta-header {	
+	color: white;
+	font-family: tahoma,arial,verdana,sans-serif;
+	font-size: 18px;
+	font-weight: bold;
+	text-align: center;
+	vertical-align: middle;
+}
+
+.window-text {
+	text-indent: 7px;
+	padding: 3px;
+}
