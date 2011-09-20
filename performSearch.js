@@ -20,7 +20,8 @@ performSearch = function(cswUrl, searchTerms, bbox) {
 	
 	// Send the request
 	Ext.Ajax.request({
-		url: "/proxy?url=" + encodeURIComponent(cswUrl),
+		// TODO: Adjust so that proxy location is read from OpenLayers or Viewer config
+		url: "proxy?url=" + encodeURIComponent(cswUrl),
 		method: "POST",
 		xmlData: cswSearchString,
 		callback: function(options, success, response) {

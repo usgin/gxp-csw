@@ -8,8 +8,9 @@ var mapLayer = Ext.extend(Object, {
 		
 		connect: function(addToMap) {
 			if (this.type == 'wms') {
-				var capabilitiesUrl = "/proxy?url=" + encodeURIComponent(this.url + "?request=GetCapabilities&service=WMS");
-				// TODO: Find a better way to get access to the gxp.Viewer that isn't dependent on what the variable is called 
+				// TODO: Adjust so that proxy location is read from OpenLayers or Viewer config
+				var capabilitiesUrl = "proxy?url=" + encodeURIComponent(this.url + "?request=GetCapabilities&service=WMS");
+				// TODO: Remove dependence on app variable
 				app.addLayerSource({
 					id: this.url,
 					config: {
