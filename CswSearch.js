@@ -61,7 +61,7 @@ gxp.plugins.CswSearch = Ext.extend(gxp.plugins.Tool, {
 				        		// TODO: implement draw-a-bounding-box-button
 				        	},
 				        	text: 'Draw Area of Interest',
-				        	icon: '/csw/img/shape_handles.png'
+				        	icon: 'csw/img/shape_handles.png'
 				        }),
 				        '->',
 				        new Ext.form.Checkbox({
@@ -75,6 +75,8 @@ gxp.plugins.CswSearch = Ext.extend(gxp.plugins.Tool, {
 		        	xtype: "tabpanel",
 		        	id: "csw-tab-container",
 					region: "center",
+					bodyStyle: "border: none;",
+					headerStyle: "border-width: 0px; border-bottom-width: 1px;",
 					activeTab: 0,
 			        items: [
 						{
