@@ -16,8 +16,6 @@ gxp.plugins.CswSearch = Ext.extend(gxp.plugins.Tool, {
 			cswUrl: this.outputConfig.cswUrl,
 			onTriggerClick: function() {
 				// Generate an array of search terms
-				/*var searchString = this.getValue();
-				searchString = searchString.replace(',', '');*/
 				searchTerms = this.getValue().replace(',', '').split(' ');
 				
 				// Look for a defined area of interest
