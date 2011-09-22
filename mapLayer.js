@@ -27,7 +27,7 @@ var mapLayer = Ext.extend(Object, {
 						layerChooser = new Ext.Window({
 							id: "wms-layer-chooser",
 							title: "WMS Layers Available",
-							tbar: [ "Available layers from " + source.store.title ],
+							tbar: [ "Available layers from " + source.title ],
 							layout: "fit",
 							height: 300,
 							width: 450,
