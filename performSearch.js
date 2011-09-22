@@ -27,15 +27,42 @@ performSearch = function(cswUrl, searchTerms, bbox) {
 		callback: function(options, success, response) {
 			// Parse the response
 			if (success) {
-				var cswResponse = response.responseText;
-				var parsedResponse = parser.read(cswResponse);
+				cswResponse = response.responseText;
+				parsedResponse = parser.read(cswResponse);
 				
-				var resultsStore = Ext.getCmp("csw-results-table").resultsStore;
+				tabContainer = Ext.getCmp("csw-tab-container");
+				resultsStore = tabContainer.searchStore;
+				if (tabContainer.findById("csw-search-table") == null) {
+					tabContainer.add(Ext.apply(resultsStore.panel, {
+						listeners: {
+							add: function(table, newPanel, index) {
+								// Make sure the map contains a bboxLayer
+								map = table.map;
+								bboxLyrs = map.getLayersByName("CSW Bounding Boxes");
+								if (bboxLyrs.length < 1) {
+									bboxLyr = bboxLayer();
+									map.addLayer(bboxLyr);
+									addBboxControls(bboxLyr, map, table);
+								}
+								else {
+									bboxLyr = bboxLyrs[0];
+								}
+								
+								// Add a bbox to the layer								
+								bboxLyr.addFeatures([ newPanel.feature ]);
+							},
+							remove: function(table, removedPanel) {
+								table.map.getLayersByName("CSW Bounding Boxes")[0].removeFeatures([ removedPanel.feature ]);
+							}
+						}
+					}));
+				}
 				
 				// parsedResponse.success = false indicates an exception was returned
 				resultsStore.removeAll();
 				if (parsedResponse.success == false) { return; }
 				else { resultsStore.loadData(parsedResponse); }
+				tabContainer.activate("csw-results-table");
 			}
 			else {
 				alert("Search Failed!");

@@ -1,11 +1,13 @@
 function retrieveRecord(fileid) {
-	var ds = Ext.getCmp("csw-results-table").resultsStore;
-	var index = ds.find('fileid', fileid);
-	return ds.getAt(index);
+	store = Ext.getCmp("csw-tab-container").searchStore;
+	index = store.find('fileid', fileid);
+	return store.getAt(index);
 }
 
 function retrievePanel(fileid) {
-	return Ext.getCmp("csw-results-table").findById(fileid + '-result-row');
+	record = retrieveRecord(fileid);
+	if (record == null) { return null; }
+	return Ext.getCmp("csw-search-table").findById(record.id + "-search-row");
 }
 
 function downloadFile(url, filename) {
@@ -29,26 +31,38 @@ function detailsRecord(fileid) {
 }
 
 function lockRecord(fileid) {
-	/*
-	var record = retrieveRecord(fileid);
-	var newPanel = new cswResultRow(record.data).panel;
-	var preexisting = Ext.getCmp("locked-results-panel");
-	if ( preexisting == null) {
-		var lockedResults = new lockedResultsPanel({
-			items: [ newPanel ]
-		});
-		lockedResults.addPanel();
+	tabContainer = Ext.getCmp("csw-tab-container");
+	savedStore = tabContainer.savedStore;
+	
+	if (tabContainer.findById("csw-saved-table") == null) {
+		tabContainer.add(savedStore.panel);
 	}
-	else {
-		preexisting.addItems( [ newPanel ] );
+	
+	retrievePanel(fileid).addClass("hidden-result");
+	
+	record = retrieveRecord(fileid).copy();
+	tabContainer.savedStore.add([ record ]);	
+}
+
+function unlockRecord(fileid) {
+	tabContainer = Ext.getCmp("csw-tab-container");
+	savedStore = tabContainer.savedStore;
+	searchStore = tabContainer.searchStore;
+	
+	record = savedStore.getAt(savedStore.find('fileid', fileid));
+	savedStore.remove(record);
+	
+	showThisPanel = retrievePanel(fileid);
+	if (showThisPanel != null) { 
+		showThisPanel.removeClass("hidden-result");
+		tabContainer.activate(searchStore.getTable());
 	}
-	*/
 }
 
 function removeRecord(fileid) {
-	var panel = retrievePanel(fileid);
-	var table = Ext.getCmp("csw-results-table");
-	table.remove(panel);
+	record = retrieveRecord(fileid);
+	store = Ext.getCmp("csw-tab-container").searchStore;
+	store.remove(record);
 }
 
 function downloadRecord(fileid, url) {

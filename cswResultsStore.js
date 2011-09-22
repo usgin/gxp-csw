@@ -1,4 +1,136 @@
 /*
+ * buildToolbar constructs the tools appropriate for the record passed in
+ * 	Much of the logic here is for determining which buttons to make available
+ * 	and is determined based on the "protocol" attribute of the record passed in
+ */
+function buildToolbar(record, saved) {
+	spacerWidth = 3;
+	
+	// Everything has a details button
+	detailsButton = new Ext.Button({
+		handler: function(btn, e) {
+			detailsRecord(btn.fileid); // to be defined
+		},
+		text: 'Details',
+		fileid: record.fileid,
+		icon: 'csw/img/magnifier.png'
+	});
+	
+	if (saved) {			
+		// Locked results have an unlock button
+		unlockButton = new Ext.Button({
+			handler: function(btn, e) {
+				unlockRecord(btn.fileid);
+			},
+			text: "Unlock",
+			fileid: record.fileid,
+			icon: 'csw/img/lock_open.png'
+		});
+		items = [ unlockButton, new Ext.Toolbar.Spacer({ width: spacerWidth }), detailsButton ];
+	}
+	else {			
+		// these two buttons are standard for search results.
+		lockButton = new Ext.Button({
+			handler: function(btn, e) {
+				lockRecord(btn.fileid); 
+			},
+			text: 'Lock',
+			fileid: record.fileid,
+			icon: 'csw/img/lock.png'
+		});
+		
+		removeButton = new Ext.Button({
+			handler: function(btn, e) {
+				removeRecord(btn.fileid);
+			},
+			text: 'Remove',
+			fileid: record.fileid,
+			icon: 'csw/img/cancel.png'
+		});
+		items = [ lockButton, new Ext.Toolbar.Spacer({ width: spacerWidth }), removeButton, new Ext.Toolbar.Spacer({ width: spacerWidth }), detailsButton ];
+	}					
+	
+	// Begin constructing the toolbar
+	toolbar = new Ext.Toolbar({
+		buttonAlign: 'center',
+		items: items
+	});
+	
+	// Add conditional buttons
+	var availableProtocols = record.protocols;
+			
+	zoomButton = new Ext.Button({
+		handler: function(btn, e) {
+			zoomRecord(btn.fileid); 
+		},
+		text: 'Zoom To',
+		fileid: record.fileid,
+		icon: 'csw/img/arrow_in.png'
+	});
+	toolbar.insertButton(0, zoomButton);
+	toolbar.insert(1, new Ext.Toolbar.Spacer({ width: spacerWidth }));
+	
+	if (availableProtocols.hasOwnProperty('wms') || availableProtocols.hasOwnProperty('wfs') || availableProtocols.hasOwnProperty('esri')) {
+		addButton = new Ext.Button({
+			handler: function(btn, e) {
+				addRecord(btn.fileid, availableProtocols); 
+			},
+			text: 'Add to Map',
+			fileid: record.fileid,
+			icon: 'csw/img/map_add.png'
+		});
+		insertIndex = toolbar.items.indexOf(detailsButton) - 1;
+		toolbar.insertButton(insertIndex, addButton);
+		toolbar.insert(insertIndex + 1, new Ext.Toolbar.Spacer({ width: spacerWidth }));
+	}
+	
+	if (availableProtocols.hasOwnProperty('esri')) {
+		downloadButton = new Ext.Button({
+			handler: function(btn, e) {
+				arcmapRecord(btn.fileid, availableProtocols.esri); 
+			},
+			text: 'Add to ArcMap',
+			fileid: record.fileid,
+			icon: 'csw/img/world_add.png'
+		});
+		insertIndex = toolbar.items.indexOf(detailsButton) - 1;
+		toolbar.insertButton(insertIndex, downloadButton);
+		toolbar.insert(insertIndex + 1, new Ext.Toolbar.Spacer({ width: spacerWidth }));
+	}
+	
+	if (availableProtocols.hasOwnProperty('download')) {
+		downloadButton = new Ext.Button({
+			handler: function(btn, e) {
+				downloadRecord(btn.fileid, availableProtocols.download); // to be defined
+			},
+			text: 'Download',
+			fileid: record.fileid,
+			icon: 'csw/img/arrow_down.png'
+		});
+		insertIndex = toolbar.items.indexOf(detailsButton) - 1;
+		toolbar.insertButton(insertIndex, downloadButton);
+		toolbar.insert(insertIndex + 1, new Ext.Toolbar.Spacer({ width: spacerWidth }));
+	}
+	
+	if (availableProtocols.hasOwnProperty('contact')) {
+		contactButton = new Ext.Button({
+			handler: function(btn, e) {
+				alert("Not Implemented Yet!"); // to be defined
+			},
+			text: 'Contact',
+			fileid: record.fileid,
+			icon: 'csw/img/email_open.png'
+		});
+		insertIndex = toolbar.items.indexOf(detailsButton) - 1;
+		toolbar.insertButton(insertIndex, contactButton);
+		toolbar.insert(insertIndex + 1, new Ext.Toolbar.Spacer({ width: spacerWidth }));
+	}
+	
+	// return the toolbar
+	return toolbar;
+}
+
+/*
  * keywords function takes the csw output, having been parsed by OpenLayers.Format.CSWRecords,
  * 	and returns a simpler array of keywords for the data store.
  */
@@ -122,12 +254,21 @@ guessAccessProtocol = function(v, rec) {
  * TODO: Make sure fields are valid in GeoNetwork responses
  */
 
-function cswResultsStore(tableId, map) {
+function cswResultsStore(saved, map) {
+	if (saved) {
+		tableTitle = "Saved Results";
+		tableId = "csw-saved-table";
+	}
+	else {
+		tableTitle = "Search Results";
+		tableId = "csw-search-table";
+	}
+	
 	return new Ext.data.JsonStore({
 		root: "records",
 		tableId: tableId,
 		viewerMap: map,
-		idProperty: "identifier[0].value",
+		saved: saved,
 		fields: [
            {name: 'title', mapping: 'title[0].value'},
            {name: 'abstract', mapping: 'abstract[0]'},
@@ -141,24 +282,61 @@ function cswResultsStore(tableId, map) {
       	],
       	listeners: {
       		load: function(store, records, options) {
-      			table = Ext.getCmp(store.tableId);
+      			table = store.getTable();
+      			Ext.getCmp("csw-tab-container").activate(table);
       			for (var i = 0; i < store.getCount(); i++) {
-      				table.add(store.getRecordAsPanel(store.getAt(i)));
+      				record = store.getAt(i);
+      				table.add(store.getRecordPanel(record));
+      			}
+      			table.doLayout();
+      		},
+      		add: function(store, records, index) {
+      			table = store.getTable();
+      			Ext.getCmp("csw-tab-container").activate(table);
+      			for (var i = 0; i < records.length; i++) {
+      				lockedRow = store.getRecordPanel(records[i]);
+      				table.add(lockedRow);
       			}
       			table.doLayout();
       		},
       		remove: function(store, record, index) {
-      			table = Ext.getCmp(store.tableId);
-      			panel = table.findById(record.get('fileid') + '-result-row');
+      			table = store.getTable();
+      			panel = store.getRecordPanel(record);
       			table.remove(panel);
       		},
       		clear: function(store, records) {
-      			table = Ext.getCmp(store.tableId);
-      			table.removeAll();
+      			store.getTable().removeAll();
       		}
       	},
-      	getRecordAsPanel: function(record) {
-      		return cswResultRow(record);
+      	panel: {
+    			xtype: "panel",
+    			title: tableTitle,
+    			layout: 'table',
+    			map: map,
+    			id: tableId,
+    			padding: 5,
+    			autoScroll: true,
+    			layoutConfig: { columns: 1 }	
+		},
+      	getTable: function() {
+      		return Ext.getCmp(this.tableId);
+      	},
+      	getRecordPanel: function(record) {
+      		if (this.saved) {
+      			id = record.id + "-saved-row";
+      		}
+      		else {
+      			id = record.id + "-search-row";
+      		}
+      		
+      		return Ext.getCmp(id) || new Ext.Panel({
+      			id: id,
+				cls: 'result-container',
+				html: '<div class="result-heading">' + record.get('title') + '</div><div class="result-abstract">' + record.get('abstract') + '</div>',
+				bbar: buildToolbar(record.data, saved),
+				record: record,
+				feature: new OpenLayers.Feature.Vector(record.get('bbox').toGeometry(), record.data)
+      		});
       	}
 	});
 }

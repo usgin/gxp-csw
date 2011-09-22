@@ -19,10 +19,6 @@
 
 .result-abstract {
 	padding: 4px;
-	/*
-	border-left: 1px solid #99BBE8;
-	border-right: 1px solid #99BBE8;
-	*/
 }
 
 .result-toolbar {
@@ -65,3 +61,6 @@
 	text-indent: 7px;
 	padding: 3px;
 }
+
+.hidden-result {
+	display: none;
