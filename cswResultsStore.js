@@ -247,6 +247,10 @@ guessAccessProtocol = function(v, rec) {
 	return results;
 };
 
+function paginatorButtonHandler(btn, e) {
+	performSearch(btn.url, Ext.getCmp("csw-search-field").getSearchTerms(), Ext.getCmp("csw-search-field").getBbox(), btn.start);
+}
+
 /*
  * cswResultsStore is an Ext.data.JsonStore containing the results of the current csw output.
  * 	Its loadData method expects an object that is the parsed output from OpenLayers.Format.CSWRecords
@@ -254,14 +258,48 @@ guessAccessProtocol = function(v, rec) {
  * TODO: Make sure fields are valid in GeoNetwork responses
  */
 
-function cswResultsStore(saved, map) {
+function cswResultsStore(saved, map, url) {
 	if (saved) {
 		tableTitle = "Saved Results";
 		tableId = "csw-saved-table";
+		bottomBar = ["->", 
+          new Ext.Button({
+			text: "Save these results",
+			icon: "csw/img/disk.png"
+          })
+        ];
 	}
 	else {
 		tableTitle = "Search Results";
 		tableId = "csw-search-table";
+		bottomBar = ["->",
+             new Ext.Button({
+            	 id: "csw-results-first",
+            	 icon: "csw/img/resultset_first.png",
+            	 url: url,
+            	 start: 1,
+            	 handler: paginatorButtonHandler
+             }),
+             new Ext.Button({
+            	 id: "csw-results-previous",
+            	 icon: "csw/img/resultset_previous.png",
+            	 url: url,
+            	 start: 1,
+            	 handler: paginatorButtonHandler
+             }),
+             {
+            	 xtype: "tbtext",
+            	 id: "csw-results-text",
+            	 text: "Hello, here are some records!"
+             },
+             new Ext.Button({
+            	 id: "csw-results-next",
+            	 icon: "csw/img/resultset_next.png",
+            	 url: url,
+            	 start: 1,
+            	 handler: paginatorButtonHandler
+             })             
+        ];
 	}
 	
 	return new Ext.data.JsonStore({
@@ -269,6 +307,7 @@ function cswResultsStore(saved, map) {
 		tableId: tableId,
 		viewerMap: map,
 		saved: saved,
+		url: url,
 		fields: [
            {name: 'title', mapping: 'title[0].value'},
            {name: 'abstract', mapping: 'abstract[0]'},
@@ -316,7 +355,8 @@ function cswResultsStore(saved, map) {
     			id: tableId,
     			padding: 5,
     			autoScroll: true,
-    			layoutConfig: { columns: 1 }	
+    			layoutConfig: { columns: 1 },
+    			bbar: bottomBar
 		},
       	getTable: function() {
       		return Ext.getCmp(this.tableId);
@@ -337,6 +377,22 @@ function cswResultsStore(saved, map) {
 				record: record,
 				feature: new OpenLayers.Feature.Vector(record.get('bbox').toGeometry(), record.data)
       		});
+      	},
+      	adjustPaginator: function(resultsInfo) {
+      		firstRecordShown = resultsInfo.nextRecord - resultsInfo.numberOfRecordsReturned;
+      		theText = "Showing " + firstRecordShown + " - " + (resultsInfo.nextRecord - 1) + " of " + resultsInfo.numberOfRecordsMatched + " results";
+      		
+      		// Adjust text
+      		Ext.getCmp("csw-results-text").setText(theText);
+      		
+      		terms = Ext.getCmp("csw-search-field").getSearchTerms();
+      		bbox = Ext.getCmp("csw-search-field").getBbox();
+      		
+      		// Adjust button starts
+      		moveBack = firstRecordShown - resultsInfo.numberOfRecordsReturned;
+      		Ext.getCmp("csw-results-previous").start = moveBack > 0 ? moveBack : 1;
+      		
+      		Ext.getCmp("csw-results-next").start = resultsInfo.nextRecord;
       	}
 	});
 }

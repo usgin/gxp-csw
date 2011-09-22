@@ -22,10 +22,12 @@ gxp.plugins.CswSearch = Ext.extend(gxp.plugins.Tool, {
 						app: this.target,
 						cswUrl: this.outputConfig.cswUrl,
 						onTriggerClick: function() {
-							// Generate an array of search terms
-							searchTerms = this.getValue().replace(',', '').split(' ');
-							
-							// Look for a defined area of interest
+							performSearch(this.cswUrl, this.getSearchTerms(), this.getBbox(), 1);
+						},
+						getSearchTerms: function() {
+							return this.getValue().replace(',', '').split(' ');
+						},
+						getBbox: function() {
 							var checkBox = Ext.getCmp('limit-by-map-extent');
 							bbox = null;
 							if (checkBox.getValue() == true) {
@@ -35,11 +37,9 @@ gxp.plugins.CswSearch = Ext.extend(gxp.plugins.Tool, {
 								// Project it to EPSG:4326
 								sourceProj = new OpenLayers.Projection("EPSG:3857");
 								destProj = new OpenLayers.Projection("EPSG:4326");
-								bbox = webBounds.transform(sourceProj, destProj);
+								return webBounds.transform(sourceProj, destProj);
 							}
-							
-							// Perform the search
-							performSearch(this.cswUrl, searchTerms, bbox);
+							else { return null; }
 						},
 						listeners: {
 							specialkey: function(f, e) {
@@ -78,8 +78,8 @@ gxp.plugins.CswSearch = Ext.extend(gxp.plugins.Tool, {
 					bodyStyle: "border: none;",
 					headerStyle: "border-width: 0px; border-bottom-width: 1px;",
 					activeTab: 0,
-					searchStore: cswResultsStore(false, this.target.mapPanel.map),
-					savedStore: cswResultsStore(true, this.target.mapPanel.map),			        
+					searchStore: cswResultsStore(false, this.target.mapPanel.map, this.outputConfig.cswUrl),
+					savedStore: cswResultsStore(true, this.target.mapPanel.map, this.outputConfig.cswUrl),			        
 		        }
 	        ]
 		}, config || {});

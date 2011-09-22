@@ -1,10 +1,11 @@
-performSearch = function(cswUrl, searchTerms, bbox) {
+performSearch = function(cswUrl, searchTerms, bbox, start) {
 	var theFilter = generateFilters(searchTerms, bbox);
 		
 	// Build the searchObject
 	var searchObject = {
 		maxRecords: 20,
 		resultType: "results",
+		startPosition: start,
 		Query: {					
 			ElementSetName: {"value": "summary"},
 			Constraint: {
@@ -37,6 +38,7 @@ performSearch = function(cswUrl, searchTerms, bbox) {
 						listeners: {
 							add: function(table, newPanel, index) {
 								// Make sure the map contains a bboxLayer
+								if (table.layout == "toolbar") { return; }
 								map = table.map;
 								bboxLyrs = map.getLayersByName("CSW Bounding Boxes");
 								if (bboxLyrs.length < 1) {
@@ -61,7 +63,10 @@ performSearch = function(cswUrl, searchTerms, bbox) {
 				// parsedResponse.success = false indicates an exception was returned
 				resultsStore.removeAll();
 				if (parsedResponse.success == false) { return; }
-				else { resultsStore.loadData(parsedResponse); }
+				else { 
+					resultsStore.loadData(parsedResponse);
+					resultsStore.adjustPaginator(parsedResponse.SearchResults);
+				}
 				tabContainer.activate("csw-results-table");
 			}
 			else {
