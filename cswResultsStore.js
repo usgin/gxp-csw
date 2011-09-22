@@ -115,7 +115,8 @@ function buildToolbar(record, saved) {
 	if (availableProtocols.hasOwnProperty('contact')) {
 		contactButton = new Ext.Button({
 			handler: function(btn, e) {
-				alert("Not Implemented Yet!"); // to be defined
+				//TODO: Implement contact functionality
+				notImplementedYet().show();
 			},
 			text: 'Contact',
 			fileid: record.fileid,
@@ -182,7 +183,7 @@ parseOgcCapabilitiesUrl = function(inputUrl) {
  * TODO: Generalize guessAccessProtocols to work with GeoNetwork csw:Record
  */
 guessAccessProtocol = function(v, rec) {
-	// Get a couple of references from the record passed in
+	// Get a couple of references from the rTecord passed in
 	geoportalAssigned = rec.type[0].value; // Geoportal-assigned "type"
 	allUrls = rec.references; // List of urls that geoportal offered
 	results = {}; // Dictionary of protocols guessed
@@ -265,7 +266,11 @@ function cswResultsStore(saved, map, url) {
 		bottomBar = ["->", 
           new Ext.Button({
 			text: "Save these results",
-			icon: "csw/img/disk.png"
+			icon: "csw/img/disk.png",
+			handler: function() {
+				//TODO: Implement saving record functionality
+				notImplementedYet().show();
+			}
           })
         ];
 	}

@@ -59,6 +59,7 @@ gxp.plugins.CswSearch = Ext.extend(gxp.plugins.Tool, {
 				        new Ext.Button({
 				        	handler: function(btn, e) {
 				        		// TODO: implement draw-a-bounding-box-button
+				        		notImplementedYet().show();
 				        	},
 				        	text: 'Draw Area of Interest',
 				        	icon: 'csw/img/shape_handles.png'
