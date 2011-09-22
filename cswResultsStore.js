@@ -372,7 +372,7 @@ function cswResultsStore(saved, map, url) {
       		return Ext.getCmp(id) || new Ext.Panel({
       			id: id,
 				cls: 'result-container',
-				html: '<div class="result-heading">' + record.get('title') + '</div><div class="result-abstract">' + record.get('abstract') + '</div>',
+				html: '<div class="result-heading x-panel-header">' + record.get('title') + '</div><div class="result-abstract">' + record.get('abstract') + '</div>',
 				bbar: buildToolbar(record.data, saved),
 				record: record,
 				feature: new OpenLayers.Feature.Vector(record.get('bbox').toGeometry(), record.data)

@@ -40,7 +40,7 @@ performSearch = function(cswUrl, searchTerms, bbox, start) {
 								// Make sure the map contains a bboxLayer
 								if (table.layout == "toolbar") { return; }
 								map = table.map;
-								bboxLyrs = map.getLayersByName("CSW Bounding Boxes");
+								bboxLyrs = map.getLayersByName("Search Result Footprints");
 								if (bboxLyrs.length < 1) {
 									bboxLyr = bboxLayer();
 									map.addLayer(bboxLyr);
@@ -54,7 +54,7 @@ performSearch = function(cswUrl, searchTerms, bbox, start) {
 								bboxLyr.addFeatures([ newPanel.feature ]);
 							},
 							remove: function(table, removedPanel) {
-								table.map.getLayersByName("CSW Bounding Boxes")[0].removeFeatures([ removedPanel.feature ]);
+								table.map.getLayersByName("Search Result Footprints")[0].removeFeatures([ removedPanel.feature ]);
 							}
 						}
 					}));

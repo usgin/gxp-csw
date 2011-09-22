@@ -3,7 +3,7 @@
  */
 function bboxLayer() {
 	return  new OpenLayers.Layer.Vector(
-		"CSW Bounding Boxes", 
+		"Search Result Footprints", 
 		{
 			styleMap: new OpenLayers.StyleMap({
 				'default': new OpenLayers.Style({
