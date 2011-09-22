@@ -79,9 +79,7 @@ function addRecord(fileid, protocols) {
 	
 	// Create the appropriate type of layer
 	var layer = new mapLayer(connectProtocol, connectUrl, fileid);
-	
-	// Connect to the new layer
-	layer.connect(true);
+	layer.connect();
 }
 
 function arcmapRecord(fileid, url) {
