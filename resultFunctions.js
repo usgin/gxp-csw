@@ -20,7 +20,7 @@ function zoomRecord(fileid) {
 	map.zoomToExtent(record.get('bbox'));
 	bboxSelector = map.getControl('bbox-select-control');
 	
-	if (map.getLayersByName("CSW Bounding Boxes")[0].selectedFeatures.length > 0) { bboxSelector.unselectAll(); }
+	if (map.getLayersByName("Search Result Footprints")[0].selectedFeatures.length > 0) { bboxSelector.unselectAll(); }
 	bboxSelector.select(retrievePanel(fileid).feature);
 }
 
@@ -35,7 +35,17 @@ function lockRecord(fileid) {
 	savedStore = tabContainer.savedStore;
 	
 	if (tabContainer.findById("csw-saved-table") == null) {
-		tabContainer.add(savedStore.panel);
+		tabContainer.add(Ext.apply(savedStore.panel, {
+			listeners: {
+				add: function() {
+					Ext.getCmp("csw-saved-table").setTitle("Saved Results (" + savedStore.getCount() + ")");
+				},
+				remove: function() {
+					Ext.getCmp("csw-saved-table").setTitle("Saved Results (" + savedStore.getCount() + ")");
+				},
+				scope: this
+			}
+		}));
 	}
 	
 	retrievePanel(fileid).addClass("hidden-result");

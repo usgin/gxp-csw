@@ -8,17 +8,17 @@ function bboxLayer() {
 			styleMap: new OpenLayers.StyleMap({
 				'default': new OpenLayers.Style({
 					fillOpacity: 0,
-					strokeColor: '#0CAFF0',
+					strokeColor: '#3C52FA',
 					strokeWidth: 1
 				}),
 				'select': new OpenLayers.Style({
-					fillColor: '#ee9900',
+					fillColor: '#FF6426',
 					fillOpacity: 0.2,
-					strokeColor: '#ee9900',
+					strokeColor: '#FF6426',
 					strokeWidth: 3
 				}),
 				'hover': new OpenLayers.Style({
-					strokeColor: '#FEFE00',
+					strokeColor: '#16F7EC',
 					strokeWidth: 3
 				})
 			}) 

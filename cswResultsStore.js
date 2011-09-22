@@ -393,6 +393,9 @@ function cswResultsStore(saved, map, url) {
       		Ext.getCmp("csw-results-previous").start = moveBack > 0 ? moveBack : 1;
       		
       		Ext.getCmp("csw-results-next").start = resultsInfo.nextRecord;
+      		
+      		// Adjust the table Title
+      		Ext.getCmp("csw-search-table").setTitle("Search Results (" + resultsInfo.numberOfRecordsMatched + ")");
       	}
 	});
 }
