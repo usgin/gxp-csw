@@ -23,6 +23,7 @@ var mapLayer = Ext.extend(Object, {
 						url: capabilitiesUrl
 					},
 					callback: function() {
+						Ext.getCmp(this.name + "-add-button").setIcon("csw/img/map_add.png");
 						source = this.app.layerSources[this.url];
 						layerChooser = new Ext.Window({
 							id: "wms-layer-chooser",

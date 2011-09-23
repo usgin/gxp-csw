@@ -73,7 +73,9 @@ function buildToolbar(record, saved) {
 	
 	if (availableProtocols.hasOwnProperty('wms') || availableProtocols.hasOwnProperty('wfs') || availableProtocols.hasOwnProperty('esri')) {
 		addButton = new Ext.Button({
+			id: record.fileid + "-add-button",
 			handler: function(btn, e) {
+				btn.setIcon("csw/img/loading.gif");
 				addRecord(btn.fileid, availableProtocols); 
 			},
 			text: 'Add to Map',

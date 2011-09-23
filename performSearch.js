@@ -19,6 +19,9 @@ performSearch = function(cswUrl, searchTerms, bbox, start) {
 	var parser = new OpenLayers.Format.CSWGetRecords();
 	var cswSearchString = parser.write(searchObject);
 	
+	// Set the loading icon rolling
+	Ext.getCmp("csw-search-loading").setIcon("csw/img/loading.gif");
+	
 	// Send the request
 	Ext.Ajax.request({
 		// TODO: Adjust so that proxy location is read from OpenLayers or Viewer config
@@ -26,6 +29,7 @@ performSearch = function(cswUrl, searchTerms, bbox, start) {
 		method: "POST",
 		xmlData: cswSearchString,
 		callback: function(options, success, response) {
+			Ext.getCmp("csw-search-loading").setIcon(null);
 			// Parse the response
 			if (success) {
 				cswResponse = response.responseText;

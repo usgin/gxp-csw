@@ -77,7 +77,11 @@ gxp.plugins.CswSearch = Ext.extend(gxp.plugins.Tool, {
 								}
 							}
 						}
-					})
+					}),
+					{
+			    	   xtype: "button",
+		    		   id: "csw-search-loading"
+					}
 		        ],
 			items: [
 		        {
