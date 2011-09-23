@@ -53,7 +53,8 @@ function buildToolbar(record, saved) {
 	// Begin constructing the toolbar
 	toolbar = new Ext.Toolbar({
 		buttonAlign: 'center',
-		items: items
+		items: items,
+		style: "border: none; border-top: 1px solid #D0D0D0;"
 	});
 	
 	// Add conditional buttons
@@ -257,12 +258,12 @@ function paginatorButtonHandler(btn, e) {
  * 	Its loadData method expects an object that is the parsed output from OpenLayers.Format.CSWRecords
  * 
  * TODO: Make sure fields are valid in GeoNetwork responses
- */
-
+*/
 function cswResultsStore(saved, map, url) {
 	if (saved) {
 		tableTitle = "Saved Results";
 		tableId = "csw-saved-table";
+		storeId = "csw-saved-store";
 		bottomBar = ["->", 
           new Ext.Button({
 			text: "Save these results",
@@ -277,6 +278,7 @@ function cswResultsStore(saved, map, url) {
 	else {
 		tableTitle = "Search Results";
 		tableId = "csw-search-table";
+		storeId = "csw-search-store";
 		bottomBar = ["->",
              new Ext.Button({
             	 id: "csw-results-first",
@@ -308,6 +310,7 @@ function cswResultsStore(saved, map, url) {
 	}
 	
 	return new Ext.data.JsonStore({
+		id: storeId,
 		root: "records",
 		tableId: tableId,
 		viewerMap: map,
@@ -378,6 +381,8 @@ function cswResultsStore(saved, map, url) {
       			id: id,
 				cls: 'result-container',
 				html: '<div class="result-heading x-panel-header">' + record.get('title') + '</div><div class="result-abstract">' + record.get('abstract') + '</div>',
+				bodyStyle: "border: none;",
+				style: "border-width: 1px;",
 				bbar: buildToolbar(record.data, saved),
 				record: record,
 				feature: new OpenLayers.Feature.Vector(record.get('bbox').toGeometry(), record.data)

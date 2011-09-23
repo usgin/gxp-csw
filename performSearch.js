@@ -3,7 +3,7 @@ performSearch = function(cswUrl, searchTerms, bbox, start) {
 		
 	// Build the searchObject
 	var searchObject = {
-		maxRecords: 20,
+		maxRecords: 10,
 		resultType: "results",
 		startPosition: start,
 		Query: {					

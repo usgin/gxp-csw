@@ -58,7 +58,12 @@ function addBboxControls(bboxLyr, map, resultsTable) {
 				id: 'bbox-select-control',
 				onSelect: function(feature) {
 					// Select the Panel that corresponds to this bbox
-					// TODO: Implement selection of the result in the table
+					store = Ext.getCmp("csw-tab-container").searchStore;
+					record = store.getAt(store.find('fileid', feature.attributes.fileid));
+					panel = store.getRecordPanel(record);
+					if (store.selectedPanel || false) { store.selectedPanel.removeClass("result-row-selected"); }
+					panel.addClass("result-row-selected");
+					store.selectedPanel = panel;
 				}							
 			}
 	);
