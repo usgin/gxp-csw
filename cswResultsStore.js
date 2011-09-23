@@ -380,7 +380,7 @@ function cswResultsStore(saved, map, url) {
       		return Ext.getCmp(id) || new Ext.Panel({
       			id: id,
 				cls: 'result-container',
-				html: '<div class="result-heading x-panel-header">' + record.get('title') + '</div><div class="result-abstract">' + record.get('abstract') + '</div>',
+				html: '<div class="result-heading x-panel-header" onclick="zoomRecord(\'' + record.get("fileid") + '\');">' + record.get('title') + '</div><div class="result-abstract">' + record.get('abstract') + '</div>',
 				bodyStyle: "border: none;",
 				style: "border-width: 1px;",
 				bbar: buildToolbar(record.data, saved),
