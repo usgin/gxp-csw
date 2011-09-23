@@ -13,7 +13,7 @@ var mapLayer = Ext.extend(Object, {
 	        });
 			
 			// TODO: Adjust so that proxy location is read from OpenLayers or Viewer config
-			var capabilitiesUrl = "proxy?url=" + encodeURIComponent(this.url + "?request=GetCapabilities&service=WMS");
+			var capabilitiesUrl = "proxy?url=" + encodeURIComponent(this.url + "&request=GetCapabilities&service=WMS");
 			
 			if (this.type == "wms") {
 				this.app.addLayerSource({

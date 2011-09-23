@@ -166,11 +166,11 @@ projectBounds = function(v, rec) {
  */
 parseOgcCapabilitiesUrl = function(inputUrl) {
 	var urlBits = inputUrl.split('?');
-	var finalUrl = urlBits[0];
+	var finalUrl = urlBits[0] + "?";
 	var parameters = urlBits[1].split('&');
 	for (var i = 0; i < parameters.length; i++) {
 		if (parameters[i].indexOf("map=") == 0) {
-			finalUrl = finalUrl + "?" + parameters[i];
+			finalUrl = finalUrl + parameters[i];
 			continue;
 		}
 	}
