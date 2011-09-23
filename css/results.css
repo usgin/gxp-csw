@@ -43,7 +43,6 @@
 
 .result-row-selected *.result-heading {
 	background-image: url("../img/selection-header.gif");
-	/*color: white; /*#3C52FA;*/
 	border-bottom-color: #FF6426;
 }
 
