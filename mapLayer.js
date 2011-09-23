@@ -76,6 +76,15 @@ var mapLayer = Ext.extend(Object, {
 					},
 					scope: this
 				});
+			} else { 
+				// TODO: Support other formats (WFS, ESRI)
+				(new Ext.Window({
+					title: "Sorry!",
+					html: "<p class='window-text'>My apologies, but currently we can only add WMS Services!</p>",
+					width: 150
+				})).show();
+				
+				Ext.getCmp(this.name + "-add-button").setIcon("csw/img/map_add.png"); 
 			}
 		}
 });
