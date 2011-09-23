@@ -8,6 +8,35 @@ gxp.plugins.CswSearch = Ext.extend(gxp.plugins.Tool, {
 	},
 	
 	addOutput: function(config) {
+		map = this.target.mapPanel.map;
+		bboxControl = new OpenLayers.Control({ id: "bbox-draw-control" });
+		OpenLayers.Util.extend(bboxControl, {
+			map: map,
+			url: this.outputConfig.cswUrl,
+			draw: function() {
+				this.box = new OpenLayers.Handler.Box( bboxControl,
+					{"done": this.go }					
+				);
+				//this.box.activate();
+			},
+			ready: function() { this.box.activate(); },
+			go: function(bounds) {
+				// Bounds returned are in pixel space
+				ll = this.map.getLonLatFromPixel(new OpenLayers.Pixel(bounds.left, bounds.bottom));
+				ur = this.map.getLonLatFromPixel(new OpenLayers.Pixel(bounds.right, bounds.top));
+				bounds = new OpenLayers.Bounds(ll.lon, ll.lat, ur.lon, ur.lat);
+				
+				// Project it to EPSG:4326
+				sourceProj = new OpenLayers.Projection("EPSG:3857");
+				destProj = new OpenLayers.Projection("EPSG:4326");
+				bounds = bounds.transform(sourceProj, destProj);
+				
+				performSearch(this.url, Ext.getCmp("csw-search-field").getSearchTerms(), bounds, 1);
+                this.box.deactivate();
+			}
+		});
+		map.addControl(bboxControl);
+		
 		config = Ext.apply({
 			xtype: "panel",
 			id: "csw-search-container",			
@@ -58,11 +87,11 @@ gxp.plugins.CswSearch = Ext.extend(gxp.plugins.Tool, {
 					items: [
 				        new Ext.Button({
 				        	handler: function(btn, e) {
-				        		// TODO: implement draw-a-bounding-box-button
-				        		notImplementedYet().show();
+				        		btn.map.getControl("bbox-draw-control").box.activate();
 				        	},
 				        	text: 'Draw Area of Interest',
-				        	icon: 'csw/img/shape_handles.png'
+				        	icon: 'csw/img/shape_handles.png',
+				        	map: this.target.mapPanel.map
 				        }),
 				        '->',
 				        new Ext.form.Checkbox({
