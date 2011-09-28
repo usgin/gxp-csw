@@ -392,7 +392,8 @@ function cswResultsStore(saved, map, url) {
       	},
       	adjustPaginator: function(resultsInfo) {
       		firstRecordShown = resultsInfo.nextRecord - resultsInfo.numberOfRecordsReturned;
-      		theText = "Showing " + firstRecordShown + " - " + (resultsInfo.nextRecord - 1) > 0 ? (resultsInfo.nextRecord - 1) : 0 + " of " + resultsInfo.numberOfRecordsMatched + " results";
+      		lastRecordShown = (resultsInfo.nextRecord - 1) > 0 ? (resultsInfo.nextRecord - 1) : 0;
+      		theText = "Showing " + firstRecordShown + " - " + lastRecordShown + " of " + resultsInfo.numberOfRecordsMatched + " results";
       		
       		// Adjust text
       		Ext.getCmp("csw-results-text").setText(theText);
