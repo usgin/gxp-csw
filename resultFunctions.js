@@ -25,6 +25,7 @@ function zoomRecord(fileid) {
 }
 
 function detailsRecord(fileid) {
+	// TODO: Use GetRecordsByID for details
 	var record = retrieveRecord(fileid);
 	var detailsUrl = record.get('protocols').details;
 	window.open(detailsUrl);
