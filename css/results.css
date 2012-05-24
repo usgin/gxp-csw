@@ -78,3 +78,9 @@
 
 .hidden-result {
 	display: none;
+}
+
+/*Disable Google copyright popup*/
+.olLayerGoogleV3.olLayerGooglePoweredBy {
+	display: none;
+}
